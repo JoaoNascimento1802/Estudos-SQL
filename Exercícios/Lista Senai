@@ -1,1 +1,39 @@
+#Exc 1:  Quais os países cadastrados?
+select pais from pais;
+
+#Exc 2:  Quantos países estão cadastrados?
+select Count(*) pais from pais
+
+#Exc 3: Quantos países que terminam com a letra "A" estão cadastrados?
+select Count(*) pais 
+from pais
+where pais like 'A%';
+
+#Exc 4:  Listar, sem repetição, os anos que houveram lançamento de filme
+select distinct ano_de_lancamento
+from filme
+
+#Exc 5: Alterar o ano de lançamento (deixar igual a 2007) para filmes que iniciem com a Letra "B".
+update filme
+set ano_de_lancamento = 2007
+where titulo like 'B%'
+
+#Exc 6: Listar os filmes que possuem duração do filme maior que 100 e classificação igual a "G"
+select Count(*) filme
+from filme
+where duracao_do_filme > 100 and classificacao = "g"
+
+#Exc 7: Alterar o ano de lançamento igual 2008 para filmes que possuem duração da locação menor que 4 e classificação igual a "PG". 
+update filme
+set ano_de_lancamento = 2008
+where duracao_da_locacao < 4 and classificacao = 'PG'
+
+#Exc 8: Listar a quantidade de filmes que estejam classificados como "PG-13" e preço da locação maior que 2.40.
+select distinct Count(*) filme
+from filme
+where classificacao = 'PG-13' and preco_da_locacao > 2.40
+
+#Exc 9: Quais os idiomas que possuem filmes cadastrados? 
+select distinct idioma_id
+from filme
 
