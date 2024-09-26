@@ -37,3 +37,72 @@ where classificacao = 'PG-13' and preco_da_locacao > 2.40
 select distinct idioma_id
 from filme
 
+#Ex 19: Qual a maior duração da locação dentre os filmes?
+Select MAX(duracao_da_locacao) from filme
+
+#Ex 20: Quantos filmes possuem a maior duração de locação?
+select count(*) from filme
+where duracao_da_locacao = 7
+
+#Ex21: Quantos filmes do idioma "JAPANESE" ou "GERMAN" possuem a maior duração de locação?
+SELECT COUNT(*) 
+FROM filme
+WHERE duracao_da_locacao = 7 
+AND (idioma_id = 3 OR idioma_id = 6);
+
+#Ex22: Qual a quantidade de filmes por classificação e preço da locação?
+select classificacao , preco_da_locacao
+SELECT classificacao, preco_da_locacao, COUNT(*) AS quantidade_filme
+FROM filme
+GROUP BY classificacao, preco_da_locacao;
+
+#Ex23: Qual o maior tempo de duração de filme por categoria?
+select max(duracao_do_filme), categoria.nome
+from filme,categoria, filme_categoria
+where filme.filme_id = filme_categoria.filme_id
+and categoria.categoria_id=filme_categoria.categoria_id
+group by categoria.categoria_id
+
+#Ex24: Listar a quantidade de filmes por categoria.
+select count(*) as Quantidade, categoria.nome
+from filme,categoria, filme_categoria
+where filme.filme_id = filme_categoria.filme_id
+and categoria.categoria_id=filme_categoria.categoria_id
+group by categoria.categoria_id
+
+#Ex25: Listar a quantidade de filmes classificados como "G" por categoria.
+select count(*) as Quantidade, categoria.nome
+from filme,categoria, filme_categoria
+where filme.filme_id = filme_categoria.filme_id
+and categoria.categoria_id=filme_categoria.categoria_id
+group by categoria.categoria_id
+
+#Exc27: Listar a quantidade de filmes por categoria e classificação.
+select count(filme.filme_id), classificacao ,categoria_id from filme , filme_categoria,categoria
+where filme.filme_id = filme_categoria.filme_id and filme_categoria.categoria_id= categoria.categoria_id
+group by categoria.categoria_id,classificacao
+
+#Exc 28: Qual a quantidade de filmes por Ator ordenando decrescente por quantidade?
+SELECT COUNT(titulo), primeiro_nome , ultimo_nome from filme , ator , filme_ator
+where ator.ator_id=filme_ator.ator_id and filme.filme_id=filme_ator.filme_id
+group by filme_ator.ator_id
+order by 1 desc;
+
+#Exc 29: Qual a quantidade de filmes por ano de lançamento ordenando por quantidade crescente?
+select count(ano_de_lancamento) 
+from filme
+group by ano_de_lancamento
+order by 1 asc;
+
+#Exc 30: Listar os anos de lançamento que possuem mais de 400 filmes?
+SELECT ano_de_lancamento, COUNT(*) AS quantidade
+FROM filme
+GROUP BY ano_de_lancamento
+HAVING quantidade > 400;
+
+#Exc 31: Listar os anos de lançamento dos filmes que possuem mais de 100 filmes com preço da locação maior que a média do preço da locação dos filmes da categoria "Children"?
+SELECT YEAR	(f.ano_de_lancamento) as media_preco
+from(f.filmes)
+where media_preco >
+(nao finalizado)
+
