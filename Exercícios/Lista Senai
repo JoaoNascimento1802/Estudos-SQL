@@ -1,3 +1,4 @@
+
 #Exc 1:  Quais os países cadastrados?
 select pais from pais;
 
@@ -19,9 +20,9 @@ set ano_de_lancamento = 2007
 where titulo like 'B%'
 
 #Exc 6: Listar os filmes que possuem duração do filme maior que 100 e classificação igual a "G"
-select Count(*) filme
+select titulo
 from filme
-where duracao_do_filme > 100 and classificacao = "g"
+where duracao_do_filme > 100 and classificacao = "G"
 
 #Exc 7: Alterar o ano de lançamento igual 2008 para filmes que possuem duração da locação menor que 4 e classificação igual a "PG". 
 update filme
@@ -34,8 +35,56 @@ from filme
 where classificacao = 'PG-13' and preco_da_locacao > 2.40
 
 #Exc 9: Quais os idiomas que possuem filmes cadastrados? 
+select * from idioma
 select distinct idioma_id
 from filme
+
+#Exc 10: Alterar o idioma para "GERMAN" dos filmes que possuem preço da locação maior que 4
+update filme 
+set idioma_id = 6
+where preco_da_locacao > 4
+
+#Exc 11: Alterar o idioma para "JAPANESE" dos filmes que possuem preço da locação igual 0.99.
+update filme 
+set idioma_id = 3
+where preco_da_locacao > 0.99	
+
+#Exc 12: Listar a quantidade de filmes por classificação.
+select classificacao , count(*) as clasificacao from filme
+group by classificacao
+
+#Exc 13: Listar, sem repetição, os preços de locação dos filmes cadastrados.
+select distinct preco_da_locacao from filme
+
+#Exc 14: Listar a quantidade de filmes por preço da locação.
+select preco_da_Locacao , count(*) as preco_da_locacao from filme
+group by preco_da_locacao 
+
+#Exc 15: Listar os precos da locação que possuam mais de 340 filmes.
+select preco_da_Locacao , count(*) as preco_da_locaca from filme
+group by preco_da_locacao 
+having preco_da_locaca >340
+
+#Exc 16:  Listar a quantidade de atores por filme ordenando por quantidade de atores crescente.
+select titulo , Count(*) quantidade_ator
+from filme
+group by titulo
+order by quantidade_ator asc 
+
+#Exc 17: Listar a quantidade de atores para os filmes que possuem mais de 5 atores ordenando por quantidade de atores decrescente.
+select filme_id , Count(ator_id ) as quantidade_ator
+from filme_ator
+group by filme_id
+having count(ator_id) > 5
+order by quantidade_ator desc
+
+#Exc 18:. Listar o título e a quantidade de atores para os filmes que possuem o idioma "JAPANESE" e mais de 10 atores ordenando por ordem alfabética de título e ordem crescente de quantidadede atores
+SELECT f.filme_id, f.titulo, COUNT(fa.ator_id) AS quantidade_ator
+FROM filme_ator fa
+JOIN filme f ON fa.filme_id = f.filme_id
+GROUP BY f.filme_id, f.titulo
+HAVING COUNT(fa.ator_id) > 10
+ORDER BY quantidade_ator DESC, f.titulo ASC;
 
 #Ex 19: Qual a maior duração da locação dentre os filmes?
 Select MAX(duracao_da_locacao) from filme
@@ -43,7 +92,7 @@ Select MAX(duracao_da_locacao) from filme
 #Ex 20: Quantos filmes possuem a maior duração de locação?
 select count(*) from filme
 where duracao_da_locacao = 7
-
+select * duracao
 #Ex21: Quantos filmes do idioma "JAPANESE" ou "GERMAN" possuem a maior duração de locação?
 SELECT COUNT(*) 
 FROM filme
@@ -51,7 +100,6 @@ WHERE duracao_da_locacao = 7
 AND (idioma_id = 3 OR idioma_id = 6);
 
 #Ex22: Qual a quantidade de filmes por classificação e preço da locação?
-select classificacao , preco_da_locacao
 SELECT classificacao, preco_da_locacao, COUNT(*) AS quantidade_filme
 FROM filme
 GROUP BY classificacao, preco_da_locacao;
@@ -105,4 +153,3 @@ SELECT YEAR	(f.ano_de_lancamento) as media_preco
 from(f.filmes)
 where media_preco >
 (nao finalizado)
-
