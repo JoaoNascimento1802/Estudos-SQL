@@ -93,6 +93,7 @@ Select MAX(duracao_da_locacao) from filme
 select count(*) from filme
 where duracao_da_locacao = 7
 select * duracao
+
 #Ex21: Quantos filmes do idioma "JAPANESE" ou "GERMAN" possuem a maior duração de locação?
 SELECT COUNT(*) 
 FROM filme
@@ -149,7 +150,16 @@ GROUP BY ano_de_lancamento
 HAVING quantidade > 400;
 
 #Exc 31: Listar os anos de lançamento dos filmes que possuem mais de 100 filmes com preço da locação maior que a média do preço da locação dos filmes da categoria "Children"?
-SELECT YEAR	(f.ano_de_lancamento) as media_preco
-from(f.filmes)
-where media_preco >
-(nao finalizado)
+SELECT YEAR(ano_de_lancamento) AS ano_lanc
+FROM filme
+WHERE preco_da_locacao > (
+    SELECT AVG(preco_da_locacao)
+    FROM filme
+    JOIN filme_categoria ON filme.filme_id = filme_categoria.filme_id
+    WHERE filme_categoria.nome = 'Children'
+)
+GROUP BY YEAR(ano_de_lancamento)
+HAVING COUNT(filme.filme_id) > 100;
+
+#Exc 32: Quais as cidades e seu pais correspondente que pertencem a um país que inicie com a:
+select cidade 
