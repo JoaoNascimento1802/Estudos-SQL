@@ -162,4 +162,7 @@ GROUP BY YEAR(ano_de_lancamento)
 HAVING COUNT(filme.filme_id) > 100;
 
 #Exc 32: Quais as cidades e seu pais correspondente que pertencem a um país que inicie com a:
-select cidade 
+select cidade.cidade_id, cidade.pais_id, cidade.cidade , pais.pais
+from cidade 
+join pais on cidade.pais_id = pais.pais_id
+where pais.pais like 'A%';
