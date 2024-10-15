@@ -150,15 +150,15 @@ GROUP BY ano_de_lancamento
 HAVING quantidade > 400;
 
 #Exc 31: Listar os anos de lançamento dos filmes que possuem mais de 100 filmes com preço da locação maior que a média do preço da locação dos filmes da categoria "Children"?
-SELECT YEAR(ano_de_lancamento) AS ano_lanc
+SELECT ano_de_lancamento AS ano_lanc
 FROM filme
 WHERE preco_da_locacao > (
     SELECT AVG(preco_da_locacao)
     FROM filme
     JOIN filme_categoria ON filme.filme_id = filme_categoria.filme_id
-    WHERE filme_categoria.nome = 'Children'
+    WHERE filme_categoria = 'Children'
 )
-GROUP BY YEAR(ano_de_lancamento)
+GROUP BY ano_de_lancamento
 HAVING COUNT(filme.filme_id) > 100;
 
 #Exc 32: Quais as cidades e seu pais correspondente que pertencem a um país que inicie com a:
@@ -166,3 +166,46 @@ select cidade.cidade_id, cidade.pais_id, cidade.cidade , pais.pais
 from cidade 
 join pais on cidade.pais_id = pais.pais_id
 where pais.pais like 'A%';
+
+#Exc 33: Qual a quantidade de cidades por pais em ordem decrescente?
+SELECT pais.pais, COUNT(cidade.cidade_id) AS numero_de_cidades
+FROM cidade
+JOIN pais ON cidade.pais_id = pais.pais_id
+GROUP BY pais.pais
+ORDER BY numero_de_cidades DESC;
+
+#Exc 34: Qual a quantidade de cidades que iniciam com a Letra “A” por pais em ordem crescente?
+SELECT pais.pais, cidade.cidade , COUNT(cidade.cidade_id) AS numero_de_cidades
+from cidade 
+JOIN pais ON cidade.pais_id = pais.pais_id
+WHERE cidade.cidade LIKE 'A%'
+GROUP BY pais.pais
+ORDER BY numero_de_cidades ASC;
+
+#Exc 35: Quais os países que possuem mais de 3 cidades que iniciam com a Letra “A”?
+SELECT pais.pais , pais.pais_id , cidade.cidade , COUNT(cidade.cidade_id) AS numero_de_cidades
+from cidade 
+JOIN pais ON cidade.pais_id = pais.pais_id
+WHERE cidade.cidade LIKE 'A%' 
+GROUP BY pais.pais
+HAVING COUNT(cidade.cidade_id) > 3
+ORDER BY numero_de_cidades ASC;
+
+#Exc 36: Quais os países que possuem mais de 3 cidades que iniciam com a Letra “A” ou tenha "R"?
+SELECT pais.pais , pais.pais_id , cidade.cidade , COUNT(cidade.cidade_id) AS numero_de_cidades
+from cidade 
+JOIN pais ON cidade.pais_id = pais.pais_id
+WHERE cidade.cidade LIKE 'A%' or cidade.cidade LIKE '%R%'
+GROUP BY pais.pais
+HAVING COUNT(cidade.cidade_id) > 3
+ORDER BY numero_de_cidades ;
+
+#Exc 37: Quais os clientes moram no país “United States”?
+SELECT primeiro_nome
+FROM cliente
+JOIN endereco ON cliente.endereco_id = endereco.endereco_id
+JOIN cidade ON endereco.cidade_id = cidade.cidade_id
+JOIN pais ON cidade.pais_id = pais.pais_id
+WHERE pais.pais = 'United States';
+
+
