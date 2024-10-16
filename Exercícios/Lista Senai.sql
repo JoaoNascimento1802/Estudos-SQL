@@ -86,47 +86,47 @@ GROUP BY f.filme_id, f.titulo
 HAVING COUNT(fa.ator_id) > 10
 ORDER BY quantidade_ator DESC, f.titulo ASC;
 
-#Ex 19: Qual a maior duração da locação dentre os filmes?
+#Exc 19: Qual a maior duração da locação dentre os filmes?
 Select MAX(duracao_da_locacao) from filme
 
-#Ex 20: Quantos filmes possuem a maior duração de locação?
+#Exc 20: Quantos filmes possuem a maior duração de locação?
 select count(*) from filme
 where duracao_da_locacao = 7
 select * duracao
 
-#Ex21: Quantos filmes do idioma "JAPANESE" ou "GERMAN" possuem a maior duração de locação?
+#Exc 21: Quantos filmes do idioma "JAPANESE" ou "GERMAN" possuem a maior duração de locação?
 SELECT COUNT(*) 
 FROM filme
 WHERE duracao_da_locacao = 7 
 AND (idioma_id = 3 OR idioma_id = 6);
 
-#Ex22: Qual a quantidade de filmes por classificação e preço da locação?
+#Exc 22: Qual a quantidade de filmes por classificação e preço da locação?
 SELECT classificacao, preco_da_locacao, COUNT(*) AS quantidade_filme
 FROM filme
 GROUP BY classificacao, preco_da_locacao;
 
-#Ex23: Qual o maior tempo de duração de filme por categoria?
+#Exc 23: Qual o maior tempo de duração de filme por categoria?
 select max(duracao_do_filme), categoria.nome
 from filme,categoria, filme_categoria
 where filme.filme_id = filme_categoria.filme_id
 and categoria.categoria_id=filme_categoria.categoria_id
 group by categoria.categoria_id
 
-#Ex24: Listar a quantidade de filmes por categoria.
+#Exc 24: Listar a quantidade de filmes por categoria.
 select count(*) as Quantidade, categoria.nome
 from filme,categoria, filme_categoria
 where filme.filme_id = filme_categoria.filme_id
 and categoria.categoria_id=filme_categoria.categoria_id
 group by categoria.categoria_id
 
-#Ex25: Listar a quantidade de filmes classificados como "G" por categoria.
+#Exc 25: Listar a quantidade de filmes classificados como "G" por categoria.
 select count(*) as Quantidade, categoria.nome
 from filme,categoria, filme_categoria
 where filme.filme_id = filme_categoria.filme_id
 and categoria.categoria_id=filme_categoria.categoria_id
 group by categoria.categoria_id
 
-#Exc27: Listar a quantidade de filmes por categoria e classificação.
+#Exc 27: Listar a quantidade de filmes por categoria e classificação.
 select count(filme.filme_id), classificacao ,categoria_id from filme , filme_categoria,categoria
 where filme.filme_id = filme_categoria.filme_id and filme_categoria.categoria_id= categoria.categoria_id
 group by categoria.categoria_id,classificacao
@@ -201,11 +201,65 @@ HAVING COUNT(cidade.cidade_id) > 3
 ORDER BY numero_de_cidades ;
 
 #Exc 37: Quais os clientes moram no país “United States”?
-SELECT primeiro_nome
+SELECT primeiro_nome , pais 
 FROM cliente
 JOIN endereco ON cliente.endereco_id = endereco.endereco_id
 JOIN cidade ON endereco.cidade_id = cidade.cidade_id
 JOIN pais ON cidade.pais_id = pais.pais_id
 WHERE pais.pais = 'United States';
+
+#Exc 38: Quantos clientes moram no país “Brazil”?
+SELECT primeiro_nome , pais
+FROM cliente
+JOIN endereco ON cliente.endereco_id = endereco.endereco_id
+JOIN cidade ON endereco.cidade_id = cidade.cidade_id
+JOIN pais ON cidade.pais_id = pais.pais_id
+WHERE pais.pais = 'Brazil'
+
+#Exc 39: Qual a quantidade de clientes por pais?
+SELECT pais.pais , COUNT(cliente_id) AS total_clientes
+FROM cliente
+JOIN endereco ON cliente.endereco_id = endereco.endereco_id
+JOIN cidade ON endereco.cidade_id = cidade.cidade_id
+JOIN pais ON cidade.pais_id = pais.pais_id
+GROUP BY pais.pais
+ 
+ #Exc 40: Quais países possuem mais de 10 clientes?
+SELECT pais.pais , COUNT(cliente_id) AS total_clientes
+FROM cliente
+JOIN endereco ON cliente.endereco_id = endereco.endereco_id
+JOIN cidade ON endereco.cidade_id = cidade.cidade_id
+JOIN pais ON cidade.pais_id = pais.pais_id
+GROUP BY pais.pais
+HAVING COUNT(cliente.cliente_id) > 10
+
+#Exc 41: Qual a média de duração dos filmes por idioma?
+SELECT AVG(duracao_do_filme) , filme.idioma_id,idioma.nome 
+FROM filme
+JOIN idioma ON filme.idioma_id = idioma.idioma_id
+GROUP BY idioma.nome 
+
+#Exc 42: Qual a quantidade de atores que atuaram nos filmes do idioma “English”?
+
+#Metodo 1 :
+SELECT COUNT(ator_id) , idioma.nome
+FROM idioma
+JOIN ator ON ator_id = ator.ator_id
+WHERE idioma.nome LIKE 'English'
+GROUP BY idioma.nome
+
+#Metodo 2 :
+SELECT COUNT(DISTINCT fa.ator_id) AS numero_de_atores
+FROM idioma i
+JOIN filme f ON i.idioma_id = f.idioma_id
+JOIN filme_ator fa ON f.filme_id = fa.filme_id
+WHERE i.nome = 'English'; 
+
+#Exc 43:  Quais os atores do filme “BLANKET BEVERLY”?
+SELECT a.primeiro_nome
+FROM ator a
+JOIN filme_ator fa ON a.ator_id = fa.ator_id
+JOIN filme f ON fa.filme_id = f.filme_id
+WHERE f.titulo = 'BLANKET BEVERLY';
 
 
