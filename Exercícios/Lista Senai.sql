@@ -262,4 +262,175 @@ JOIN filme_ator fa ON a.ator_id = fa.ator_id
 JOIN filme f ON fa.filme_id = f.filme_id
 WHERE f.titulo = 'BLANKET BEVERLY';
 
+#44.Quais categorias possuem mais de 60 filmes cadastrados?
 
+SELECT COUNT(titulo), nome FROM categoria c, filme f, filme_categoria fc
+WHERE f.filme_id = fc.filme_id
+AND   fc.categoria_id = c.categoria_id
+GROUP BY c.nome
+HAVING COUNT(titulo) > 60;
+
+#45. Quais os filmes alugados (sem repetição) para clientes que moram na "Argentina"?
+    
+SELECT distinct f.titulo FROM  aluguel a, filme f, cliente c, endereco e, cidade ci, pais p, inventario inv
+WHERE  a.cliente_id = c.cliente_id
+AND    a.inventario_id = inv.inventario_id
+AND    inv.filme_id = f.filme_id
+AND    c.endereco_id = e.endereco_id
+AND    e.cidade_id  = ci.cidade_id
+AND    ci.pais_id  = p.pais_id
+AND    p.pais = "Argentina";
+
+#46. Qual a quantidade de filmes alugados por Clientes que moram na "Chile"?
+
+SELECT COUNT( f.titulo ) as Quantidade FROM  aluguel a, filme f, cliente c, endereco e, cidade ci, pais p, inventario inv
+WHERE  a.cliente_id = c.cliente_id
+AND    a.inventario_id = inv.inventario_id
+AND    inv.filme_id = f.filme_id
+AND    c.endereco_id = e.endereco_id
+AND    e.cidade_id  = ci.cidade_id
+AND    ci.pais_id  = p.pais_id
+AND    p.pais = "Chile";
+
+
+#47. Qual a quantidade de filmes alugados por funcionário?
+    
+SELECT fun.funcionario_id, COUNT( f.titulo ) as Quantidade FROM  aluguel a, filme f, funcionario fun, endereco e, cidade ci, pais p, inventario inv
+WHERE  a.funcionario_id = fun.funcionario_id
+AND    a.inventario_id = inv.inventario_id
+AND    inv.filme_id = f.filme_id
+AND    fun.endereco_id = e.endereco_id
+AND    e.cidade_id  = ci.cidade_id
+AND    ci.pais_id  = p.pais_id
+GROUP BY fun.funcionario_id;
+
+
+#48. Qual a quantidade de filmes alugados por funcionário para cada categoria?
+    
+SELECT fun.funcionario_id, COUNT( f.titulo ) as Quantidade, ca.nome
+FROM  aluguel a, filme f, funcionario fun, endereco e, cidade ci, pais p, inventario inv, categoria ca, filme_categoria fa
+WHERE  a.funcionario_id = fun.funcionario_id
+AND    a.inventario_id = inv.inventario_id
+AND    inv.filme_id = f.filme_id
+AND    fun.endereco_id = e.endereco_id
+AND    e.cidade_id  = ci.cidade_id
+AND    ci.pais_id  = p.pais_id
+AND    f.filme_id = fa.filme_id
+AND    fa.categoria_id = ca.categoria_id
+GROUP BY fun.funcionario_id, ca.nome;
+
+
+#.49 Quais Filmes possuem preço da Locação maior que a média de preço da locação?
+
+SELECT titulo, preco_da_locacao FROM filme
+WHERE preco_da_locacao > (SELECT AVG(preco_da_locacao) FROM filme WHERE preco_da_locacao IS NOT NULL); -- Dispensar no cálculo da média valores nulos (se tiver)
+
+#50. Qual a soma da duração dos Filmes por categoria?
+
+SELECT SUM(f.duracao_do_filme), a.nome FROM filme f, categoria a, filme_categoria fa
+WHERE f.filme_id = fa.filme_id
+AND   fa.categoria_id = a.categoria_id
+GROUP BY a.nome;
+
+# 51. Qual a quantidade de filmes locados mês a mês por ano?
+    
+SELECT DISTINCT MONTH(data_de_aluguel) AS mes, YEAR(data_de_aluguel) AS ano, COUNT(titulo) AS quantidade
+FROM aluguel a, filme f, inventario inv
+WHERE a.inventario_id = inv.inventario_id
+AND   inv.inventario_id  = f.filme_id
+GROUP BY MONTH(data_de_aluguel)
+ORDER  BY MONTH(data_de_aluguel) ASC;
+ 
+ #52. Qual o total pago por classificação de filmes alugados no ano de 2006?
+     
+SELECT SUM(valor), classificacao
+FROM filme f, inventario inv, aluguel a, pagamento p
+WHERE a.aluguel_id = p.aluguel_id
+AND a.inventario_id = inv.inventario_id
+AND inv.filme_id = f.filme_id
+AND   a.data_de_aluguel LIKE "2006%"
+GROUP BY f.classificacao;
+
+
+#53. Qual a média mensal do valor pago por filmes alugados no ano de 2005?
+    
+SELECT DISTINCT MONTH(a.data_de_aluguel) AS mes, AVG(p.valor) AS valor_mes
+FROM filme f, inventario inv, aluguel a, pagamento p
+WHERE a.aluguel_id = p.aluguel_id
+AND a.inventario_id = inv.inventario_id
+AND inv.filme_id = f.filme_id
+AND  a.data_de_aluguel LIKE "2005%"
+GROUP BY MONTH(data_de_aluguel);
+
+#54. Qual o total pago por filme alugado no mês de Junho de 2006 por cliente?
+    
+SELECT MONTH(a.data_de_aluguel) AS mes, AVG(p.valor) AS valor_mes, primeiro_nome
+FROM filme f, inventario inv, aluguel a, pagamento p, cliente cl
+WHERE a.aluguel_id = p.aluguel_id
+AND a.inventario_id = inv.inventario_id
+AND inv.filme_id = f.filme_id
+AND a.cliente_id = cl.cliente_id
+AND p.cliente_id = cl.cliente_id
+AND  a.data_de_aluguel LIKE "2006%"
+AND MONTH(a.data_de_aluguel) = 6
+GROUP BY cl.primeiro_nome;
+
+#Exercícios View:
+1:
+CREATE VIEW vw_idioma as
+SELECT i.idioma_id, nome, filme_id, titulo
+FROM idioma i, filme f
+WHERE i.idioma_id = f.idioma_id;
+
+SELECT * FROM vw_idioma;
+2:
+CREATE VIEW vw_inventario as
+SELECT i.inventario_id, aluguel_id, l.loja_id
+FROM inventario i, loja l, aluguel a
+WHERE i.inventario_id = a.inventario_id and i.loja_id = l.loja_id;
+
+SELECT * FROM vw_inventario;
+3:
+CREATE VIEW vw_aluguel as
+SELECT aluguel_id, data_de_aluguel, a.cliente_id, primeiro_nome, email
+FROM aluguel a, cliente c
+WHERE a.cliente_id = c.cliente_id 
+ORDER BY primeiro_nome asc;
+
+SELECT * FROM vw_aluguel
+
+#Exercícios Procedure:
+1:
+DELIMITER //
+CREATE PROCEDURE sp_pais_id (in id int)
+BEGIN
+	SELECT * FROM pais
+    WHERE pais_id = id;
+    END //
+DELIMITER ;
+
+CALL sp_pais_id(8)
+    
+2:
+DELIMITER //
+CREATE PROCEDURE sp_aluguel_id (in id int)
+BEGIN
+	SELECT * FROM aluguel
+    WHERE aluguel_id = id;
+    END //
+DELIMITER ;
+
+CALL sp_aluguel_id(4)
+
+3:
+DELIMITER //
+CREATE PROCEDURE sp_ator_id (in id int)
+BEGIN
+	SELECT * FROM ator
+    WHERE ator_id = id;
+    END //
+DELIMITER ;
+
+CALL sp_ator_id(105)
+
+Exercicio Trigger:
