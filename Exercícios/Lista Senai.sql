@@ -447,7 +447,6 @@ VALUES ('Loja atualizada', NOW());
 END $$
 DELIMITER ;
 
-
 2:
 	
 DELIMITER $$
