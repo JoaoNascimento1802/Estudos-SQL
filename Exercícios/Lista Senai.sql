@@ -375,6 +375,8 @@ AND  a.data_de_aluguel LIKE "2006%"
 AND MONTH(a.data_de_aluguel) = 6
 GROUP BY cl.primeiro_nome;
 
+#Procedures , Triggers e Viewers :
+
 #Exercícios View:
 1:
 CREATE VIEW vw_idioma as
@@ -433,4 +435,38 @@ DELIMITER ;
 
 CALL sp_ator_id(105)
 
-Exercicio Trigger:
+#Exercicio Trigger:
+1:	
+DELIMITER $$
+CREATE TRIGGER after_update_loja
+AFTER UPDATE ON LOJA
+FOR EACH ROW
+BEGIN
+INSERT INTO log_updates (descricao, data_atualizacao)
+VALUES ('Loja atualizada', NOW());
+END $$
+DELIMITER ;
+
+
+2:
+	
+DELIMITER $$
+CREATE TRIGGER after_update_idioma
+AFTER UPDATE ON idioma
+FOR EACH ROW
+BEGIN
+INSERT INTO log_updates (descricao, data_atualizacao)
+VALUES ('idioma atualizada', NOW());
+END $$
+DELIMITER ;
+
+3:
+DELIMITER $$
+CREATE TRIGGER after_update_inventario
+AFTER UPDATE ON inventario
+FOR EACH ROW
+BEGIN
+INSERT INTO log_updates (descricao, data_atualizacao)
+VALUES ('idioma atualizada', NOW());
+END $$
+DELIMITER ;
