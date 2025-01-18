@@ -14,4 +14,12 @@ add phone_number VARCHAR(15)
 select * from employees
 
 alter table employees
+add phone_number VARCHAR(15)
+
+alter table employees
+RENAME COLUMN phone_number TO email;
+	
+alter table employees
 MODIFY COLUMN email VARCHAR(15);
+
+SELECT VERSION();
